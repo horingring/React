@@ -33,8 +33,22 @@ constructor(props){
       <div className="App">
         <Subject 
           title={this.state.subject.title} 
-          content={this.state.subject.content}>
+          content={this.state.subject.content}
+          onChangeMode={function(){
+            this.setState({mode:'welcome'});
+          }.bind(this)}>
+            {/* 결론적으로 얘는 '이러기를' 바래 */}
         </Subject>
+        {/* <header>
+          <h1><a href="/" onClick={function(e){
+            e.preventDefault();
+            // this.state.mode = 'welcome';
+            this.setState({
+              mode:'welcome'
+            });
+          }.bind(this)}>{this.state.subject.title}</a></h1>
+          {this.state.subject.content}
+        </header> */}
         <br></br>
         <Nav
           data={this.state.data}
