@@ -8,17 +8,27 @@ class App extends Component{
 constructor(props){
   super(props);
   this.state = {
+    mode : 'read',
+    welcome : {title:'Welcome!!', desc:'This is Welcome mode!!!'},
     subject : {title:'Hello React', content : 'Hi Friends, Glad to meet You!!!'},
     data : [
-      {id:1, innerText:'HTML555'},
-      {id:2, innerText:'CSS333'},
-      {id:3, innerText:'JavaScriptttt'}
+      {id:1, innerText:'HTML555', content:'HTML is Hypertext Markup Language.'},
+      {id:2, innerText:'CSS333', content:'CSS is for design.'},
+      {id:3, innerText:'JavaScriptttt', content:'JavaScript is for interaction.'}
     ],
     content : {title:'MMMainAAArticle', desc:'TTThis is Main Article!'}
   }
 }
 
   render(){
+    var _title,_desc = null;
+    if(this.state.mode === 'welcome'){
+      _title = this.state.welcome.title;
+      _desc = this.state.welcome.desc;
+    }else if(this.state.mode === 'read'){
+      _title = this.state.data[0].innerText;
+      _desc = this.state.data[0].content;
+    }
     return (
       <div className="App">
         <Subject 
@@ -30,7 +40,7 @@ constructor(props){
           data={this.state.data}
         ></Nav>
         <br></br>
-        <Content title={this.state.content.title} desc={this.state.content.desc}></Content>
+        <Content title={_title} desc={_desc}></Content>
       </div>
     );
   }
