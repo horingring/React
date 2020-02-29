@@ -5,14 +5,32 @@ import Content from './components/Content';
 import Nav from './components/Nav';
 
 class App extends Component{
+constructor(props){
+  super(props);
+  this.state = {
+    subject : {title:'Hello React', content : 'Hi Friends, Glad to meet You!!!'},
+    data : [
+      {id:1, innerText:'HTML555'},
+      {id:2, innerText:'CSS333'},
+      {id:3, innerText:'JavaScriptttt'}
+    ],
+    content : {title:'MMMainAAArticle', desc:'TTThis is Main Article!'}
+  }
+}
+
   render(){
     return (
       <div className="App">
-        <Subject title="Hello World" content="Hi Guys, Nice to meet You!!!"></Subject>
+        <Subject 
+          title={this.state.subject.title} 
+          content={this.state.subject.content}>
+        </Subject>
         <br></br>
-        <Nav></Nav>
+        <Nav
+          data={this.state.data}
+        ></Nav>
         <br></br>
-        <Content title="MainArticle" desc="This is Main Article"></Content>
+        <Content title={this.state.content.title} desc={this.state.content.desc}></Content>
       </div>
     );
   }
