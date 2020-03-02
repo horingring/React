@@ -9,6 +9,7 @@ constructor(props){
   super(props);
   this.state = {
     mode : 'read',
+    selected_content_id : 2,
     welcome : {title:'Welcome!!', desc:'This is Welcome mode!!!'},
     subject : {title:'Hello React', content : 'Hi Friends, Glad to meet You!!!'},
     data : [
@@ -26,8 +27,16 @@ constructor(props){
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
     }else if(this.state.mode === 'read'){
-      _title = this.state.data[0].innerText;
-      _desc = this.state.data[0].content;
+      var i=0;
+      while(i<this.state.data.length){
+        var data = this.state.data[i];
+        if(data.id === this.state.selected_content_id){
+          _title = data.innerText;
+          _desc = data.content;
+          break;
+        }
+        i=i+1;
+      }
     }
     return (
       <div className="App">
@@ -52,6 +61,12 @@ constructor(props){
         <br></br>
         <Nav
           data={this.state.data}
+          onChangeMode={function(id){
+            this.setState({ 
+                mode : 'read',
+                selected_content_id : Number(id)
+              });
+          }.bind(this)}
         ></Nav>
         <br></br>
         <Content title={_title} desc={_desc}></Content>
