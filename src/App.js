@@ -5,6 +5,7 @@ import ReadContent from './components/ReadContent';
 import CreateContent from './components/CreateContent';
 import Nav from './components/Nav';
 import Control from './components/Control';
+import UpdateContent from './components/UpdateContent';
 
 class App extends Component{
 constructor(props){
@@ -24,24 +25,26 @@ constructor(props){
   }
 }
 
-  render(){
+  getReadData(){
+    var i=0;
+      while(i<this.state.data.length){
+        var data = this.state.data[i];
+        if(this.state.selected_content_id === data.id){
+          return data;
+        }
+        i=i+1;
+      }
+  }
+
+  getArticle(){
     var _title,_desc,_article = null;
     if(this.state.mode === 'welcome'){
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
       _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
     }else if(this.state.mode === 'read'){
-      var i=0;
-      while(i<this.state.data.length){
-        var data = this.state.data[i];
-        if(data.id === this.state.selected_content_id){
-          _title = data.innerText;
-          _desc = data.content;
-          _article = <ReadContent title={_title} desc={_desc}></ReadContent>
-          break;
-        }
-        i=i+1;
-      }
+      var _data = this.getReadData();
+      _article = <ReadContent title={_data.innerText} desc={_data.content}></ReadContent>
     }else if(this.state.mode === 'create'){
       _article = <CreateContent onSubmit={function(_title,_desc){
         this.max_contentsId = this.max_contentsId+1;
@@ -50,7 +53,24 @@ constructor(props){
         });
         this.setState({data : _data});
       }.bind(this)}></CreateContent>
+    }else if(this.state.mode === 'update'){
+      _article = <UpdateContent
+                    data = {this.getReadData()} 
+                    onSubmit={function(_title,_desc){
+                      this.max_contentsId = this.max_contentsId+1;
+                      var _data = this.state.data.concat({
+                        id:this.max_contentsId, innerText:_title, content:_desc
+                      });
+                      this.setState({data : _data});
+                    }.bind(this)}>
+                 </UpdateContent>
     }
+
+    return _article;
+  }
+
+
+  render(){
     return (
       <div className="App">
         <Subject 
@@ -59,7 +79,6 @@ constructor(props){
           onChangeMode={function(){
             this.setState({mode:'welcome'});
           }.bind(this)}>
-            {/* 결론적으로 얘는 '이러기를' 바래 */}
         </Subject>
         <br></br>
         <Nav
@@ -77,7 +96,7 @@ constructor(props){
           })
         }.bind(this)}></Control>
         <br></br>
-        {_article}
+        {this.getArticle()}
       </div>
     );
   }
