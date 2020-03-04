@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
 import  Subject from './components/Subject';
-import Content from './components/Content';
+import ReadContent from './components/ReadContent';
+import CreateContent from './components/CreateContent';
 import Nav from './components/Nav';
+import Control from './components/Control';
 
 class App extends Component{
 constructor(props){
   super(props);
+  this.max_contentsId = 3;
   this.state = {
     mode : 'read',
     selected_content_id : 2,
@@ -22,10 +25,11 @@ constructor(props){
 }
 
   render(){
-    var _title,_desc = null;
+    var _title,_desc,_article = null;
     if(this.state.mode === 'welcome'){
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
     }else if(this.state.mode === 'read'){
       var i=0;
       while(i<this.state.data.length){
@@ -33,10 +37,19 @@ constructor(props){
         if(data.id === this.state.selected_content_id){
           _title = data.innerText;
           _desc = data.content;
+          _article = <ReadContent title={_title} desc={_desc}></ReadContent>
           break;
         }
         i=i+1;
       }
+    }else if(this.state.mode === 'create'){
+      _article = <CreateContent onSubmit={function(_title,_desc){
+        this.max_contentsId = this.max_contentsId+1;
+        var _data = this.state.data.concat({
+          id:this.max_contentsId, innerText:_title, content:_desc
+        });
+        this.setState({data : _data});
+      }.bind(this)}></CreateContent>
     }
     return (
       <div className="App">
@@ -48,16 +61,6 @@ constructor(props){
           }.bind(this)}>
             {/* 결론적으로 얘는 '이러기를' 바래 */}
         </Subject>
-        {/* <header>
-          <h1><a href="/" onClick={function(e){
-            e.preventDefault();
-            // this.state.mode = 'welcome';
-            this.setState({
-              mode:'welcome'
-            });
-          }.bind(this)}>{this.state.subject.title}</a></h1>
-          {this.state.subject.content}
-        </header> */}
         <br></br>
         <Nav
           data={this.state.data}
@@ -68,8 +71,13 @@ constructor(props){
               });
           }.bind(this)}
         ></Nav>
+        <Control onChangeMode={function(_mode){
+          this.setState({
+            mode : _mode
+          })
+        }.bind(this)}></Control>
         <br></br>
-        <Content title={_title} desc={_desc}></Content>
+        {_article}
       </div>
     );
   }
