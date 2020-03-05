@@ -51,17 +51,29 @@ constructor(props){
         var _data = this.state.data.concat({
           id:this.max_contentsId, innerText:_title, content:_desc
         });
-        this.setState({data : _data});
+        this.setState({
+          data : _data,
+          mode : "read",
+          selected_content_id : this.max_contentsId
+        });
       }.bind(this)}></CreateContent>
     }else if(this.state.mode === 'update'){
       _article = <UpdateContent
                     data = {this.getReadData()} 
-                    onSubmit={function(_title,_desc){
-                      this.max_contentsId = this.max_contentsId+1;
-                      var _data = this.state.data.concat({
-                        id:this.max_contentsId, innerText:_title, content:_desc
+                    onSubmit={function(_id,_title,_desc){
+                      var _data = Array.from(this.state.data);
+                      var i=0;
+                      while(i<_data.length){
+                        if(_id===_data[i].id){
+                          _data[i] = {id : _id, innerText:_title, content:_desc}
+                          break;
+                        }
+                        i = i+1;
+                      }
+                      this.setState({
+                        data : _data,
+                        mode : "read"
                       });
-                      this.setState({data : _data});
                     }.bind(this)}>
                  </UpdateContent>
     }
