@@ -12,7 +12,7 @@ constructor(props){
   super(props);
   this.max_contentsId = 3;
   this.state = {
-    mode : 'read',
+    mode : 'welcome',
     selected_content_id : 2,
     welcome : {title:'Welcome!!', desc:'This is Welcome mode!!!'},
     subject : {title:'Hello React', content : 'Hi Friends, Glad to meet You!!!'},
@@ -103,9 +103,28 @@ constructor(props){
           }.bind(this)}
         ></Nav>
         <Control onChangeMode={function(_mode){
-          this.setState({
-            mode : _mode
-          })
+          if(_mode === 'delete'){
+            if(window.confirm('정말 삭제하시겠습니까?')){
+              var _data = Array.from(this.state.data);
+              var i = 0;
+              while(i<_data.length){
+                if(this.state.selected_content_id === _data[i].id){
+                  _data.splice(i,1);
+                  break;
+                }
+                i = i+1;
+              }
+              this.setState({
+                data : _data,
+                mode : 'welcome'
+              });
+              alert('삭제되었습니다!');
+            }
+          }else{
+            this.setState({
+              mode : _mode
+            });
+          }
         }.bind(this)}></Control>
         <br></br>
         {this.getArticle()}
